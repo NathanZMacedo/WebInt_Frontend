@@ -1,0 +1,33 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    color: white;
+}
+
+.form label {
+    font-size: 22px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.form input {
+    background-color: purple;
+    border: 2px solid lightpink;
+    border-radius: 4px;
+    color: white;
+    padding-left: 10px;
+}
+
+.form button {
+    color: white;
+    height: 50px;
+    border-radius: 20px;
+    background-color: lightpink;
+    margin-top: 30px;
+}
+
+.form button:hover,
+.closeModal:hover {
+    cursor: pointer;
+}
