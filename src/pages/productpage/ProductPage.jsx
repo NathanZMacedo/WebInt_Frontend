@@ -8,6 +8,10 @@ function ProductPage() {
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [products, setProducts] = useState([]);
+
+  const [filter, setFilter] = useState("")
+
+
   const pegarTodasAsProductsDaApi = () => {
     axios
       .get("http://localhost:4444/products")
@@ -75,15 +79,35 @@ function ProductPage() {
     setShowModal((state) => !state);
   };
 
+
+
   // function fecharOModal(){
   //   setShowModal(false)
   // }
   // function abrirOModal(){
   //   setShowModal(true)
   // }
+
+  const filteredProducts = products.filter((product) =>
+    product.quantity.toString().includes(filter)
+  );
+
   return (
     <div>
-      <AddButton abrirOModal={mudarModal} />
+      <form action="" className="div-filters">
+        <label htmlFor="filter">Faça uma pesquisa</label>
+        <input
+          type="text"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          placeholder="Filtro de nomes"
+          name="filter"
+          id="filter"
+        ></input>
+      </form>
+
+
+      <AddButton abrirOModal={mudarModal} texto="Adicionar um produto" />
       {showModal ? (
         <Modal createProduct={createProduct} fecharOModal={mudarModal} />
       ) : null}
@@ -95,7 +119,7 @@ function ProductPage() {
         />
       ) : null}
       <div className="Productslist">
-        {products.map((n) => (
+        {filteredProducts.map((n) => (
           <Product
             {...n}
             deleteProduct={deleteProduct}

@@ -1,6 +1,7 @@
 import React from 'react'
 import "./Product.css"
 import { AiTwotoneEdit, AiFillDelete } from "react-icons/ai";
+import { FormatarData } from "../../helpers/FormatDate"
 function Product(props) {
     return (
         <div className="product-card">
