@@ -13,7 +13,7 @@ function ComidaForm(props) {
             id = props.editingComida.id;
         }
         props.createComida({ name, description, note, id })
-        props.fecharoModal();
+        props.fecharOModal();
     };
     useEffect(() => {
         if (props.editingComida) {
@@ -32,7 +32,7 @@ function ComidaForm(props) {
                 <input type="text"
                     placeholder="name"
                     name='name' id='name'
-                    onChange={(e) => setNome(e.target.value)}
+                    onChange={(e) => setName(e.target.value)}
                     value={name}
                 />
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import "./ComidaCard.css";
 import { AiTwotoneEdit, AiFillDelete } from "react-icons/ai";
-function ComidaCard({ comida, setEditMode, deleteMusic }) {
+function ComidaCard({ comida, setEditMode, deleteComida }) {
     const { name, description, note, id } = comida;
     return (
         <div id='card' className="comida-card">
@@ -17,7 +17,7 @@ function ComidaCard({ comida, setEditMode, deleteMusic }) {
                 <AiFillDelete
                     color="red"
                     width={32}
-                    onclick={() => deleteComida(id)} />
+                    onClick={() => deleteComida(id)} />
             </div>
         </div>
     )
