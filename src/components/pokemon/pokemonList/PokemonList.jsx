@@ -1,56 +1,86 @@
 import axios from "axios"
-import { UsePokemons } from "../../../hooks/Pokemons/UsePokemons"
 import { useState } from "react"
+import React from "react"
+import "./PokemonList.css"
+import { PokemonModal } from "../pokemonModal/PokemonModal.jsx";
+import UsePokemonStore from "../../../store/UsePokemonStore.jsx";
+import { UsePokemons } from "../../../hooks/Pokemons/UsePokemons"
 
 const PokemonList = () => {
-    const {loading, error, data:pokemons} = UsePokemons()
-    const [selectedPokemon, setSelectedPokemon] = useState(null)
-    const [modalVisible, setModalVisible] = useState(false)
+    const { loading, error, data: pokemons } = UsePokemons();
+    const [selectedPokemon, setSelectedPokemon] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
+    const { selectedPokemons, togglePokemon } = UsePokemonStore();
 
     if (loading) {
-        return <div>Loading...</div>
+        return <div>Loading...</div>;
     }
     if (error) {
-        return <div>Error: {error.message} </div>
+        return <div>Error: {error}</div>;
     }
 
     const extractIdFromUrl = (url) => {
-        const urlParts = url.split('/')
-        return urlParts[urlParts.length - 1]
-    }
+        const urlParts = url.split("/");
+        return urlParts[urlParts.length - 2];
+    };
 
     const fetchPokemonDetails = async (id) => {
         try {
-            const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}/`)
-            setSelectedPokemon(response.data)
-            setModalVisible(true)
+            const response = await axios.get(
+                `https://pokeapi.co/api/v2/pokemon/${id}/`
+            );
+            setSelectedPokemon(response.data);
+            setModalVisible(true);
         } catch (error) {
-            console.error("Erro ao buscar detalhes do Pokemon:", error)
+            console.error("Failed to fetch Pokémon details:", error);
         }
-    }
+    };
 
-    return(
+    return (
         <div>
+            {loading && <div>Loading...</div>}
+            {error && <div>Error: {error}</div>}
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Nome</th>
+                        <th>Selecionar</th>
                     </tr>
                 </thead>
-
-                <tbody>
-                    {pokemons.map((pokemon) => (
-                        <tr 
-                            key={pokemon.name}
-                            onClick={() => fetchPokemonDetails(extractIdFromUrl(pokemon.url))}
-                            style={{cursor: 'pointer'}}
-                        >
-
-                            <td> {extractIdFromUrl(pokemon.url)} </td>
-                            <td> {pokemon.name} </td>
-                        </tr>
-                    ))}
+                <tbody data-testid="pokemons-list">
+                    { pokemons &&
+                        pokemons.length > 0 &&
+                        pokemons.map((pokemon) => {
+                            const id = extractIdFromUrl(pokemon.url);
+                            const isSelected = selectedPokemons.some((p) => p.id === id);
+                            return (
+                                <tr
+                                    data-testid={`pokemon-${id}`}
+                                    key={pokemon.id}
+                                    style={{ cursor: "pointer" }}
+                                >
+                                    <td>{id}</td>
+                                    <td
+                                        data-testid={`pokemon-${id}-name`}
+                                        onClick={() => fetchPokemonDetails(id)}
+                                    >
+                                        {pokemon.name}
+                                    </td>
+                                    <td>
+                                        <input
+                                            type="checkbox"
+                                            checked={isSelected}
+                                            onChange={(e) => {
+                                                e.stopPropagation();
+                                                togglePokemon({ id, name: pokemon.name });
+                                            }}
+                                        />
+                                    </td>
+                                </tr>
+                            );
+                        })
+                    }
                 </tbody>
             </table>
 
@@ -61,7 +91,8 @@ const PokemonList = () => {
                 />
             )}
 
-
         </div>
-    )
-}
+    );
+};
+
+export default PokemonList;
