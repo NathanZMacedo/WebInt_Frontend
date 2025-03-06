@@ -1,10 +1,12 @@
-import {React} from 'react'
-import Pokemontist from "../../components/pokemon/pokemontist/pokemontist.js"
+import React from 'react'
+import PokemonList from '../../components/pokemon/pokemonList/PokemonList'
+
 function PokemonPage() {
     return (
         <div>
-
+            <PokemonList />
         </div>
     )
 }
+
 export default PokemonPage

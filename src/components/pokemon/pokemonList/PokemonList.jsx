@@ -4,7 +4,7 @@ import React from "react"
 import "./PokemonList.css"
 import { PokemonModal } from "../pokemonModal/PokemonModal.jsx";
 import UsePokemonStore from "../../../store/UsePokemonStore.jsx";
-import { UsePokemons } from "../../../hooks/Pokemons/UsePokemons"
+import { UsePokemons } from "../../../hooks/Pokemons/UsePokemons.jsx";
 
 const PokemonList = () => {
     const { loading, error, data: pokemons } = UsePokemons();
@@ -49,7 +49,7 @@ const PokemonList = () => {
                     </tr>
                 </thead>
                 <tbody data-testid="pokemons-list">
-                    { pokemons &&
+                    {pokemons &&
                         pokemons.length > 0 &&
                         pokemons.map((pokemon) => {
                             const id = extractIdFromUrl(pokemon.url);
@@ -57,7 +57,7 @@ const PokemonList = () => {
                             return (
                                 <tr
                                     data-testid={`pokemon-${id}`}
-                                    key={pokemon.id}
+                                    key={pokemon.name}
                                     style={{ cursor: "pointer" }}
                                 >
                                     <td>{id}</td>

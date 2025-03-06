@@ -1,6 +1,6 @@
 import React from 'react'
 import '../../form/Form.css'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 function RegisterForm(props) {
     const [user, setUser] = useState({

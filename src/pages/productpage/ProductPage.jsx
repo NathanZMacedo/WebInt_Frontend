@@ -1,130 +1,105 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AddButton from "../../components/ui/addButton/Addbutton";
 import Modal from "../../components/modal/Modal";
-import { useState } from "react";
 import axios from "axios";
 import Product from "../../components/product/Product";
-function ProductPage() {
+import './ProductPage.css'
+
+function Products() {
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [products, setProducts] = useState([]);
 
-  const [filter, setFilter] = useState("")
-
-
-  const pegarTodasAsProductsDaApi = () => {
-    axios
-      .get("http://localhost:4444/products")
-      .then((res) => {
-        // console.log(res)
-        // console.log(res.data)
-        setProducts(res.data.products);
-      })
-      .catch((err) => console.log("erro ao pegar os dados da api", err));
+  // Função para pegar todos os produtos da API
+  const pegarTodasAsProductsDaApi = async () => {
+    try {
+      const response = await axios.get("http://localhost:4444/products/",);
+      setProducts(response.data.products);
+    } catch (err) {
+      console.error("Erro ao pegar os dados da API", err);
+    }
   };
+
+  // Função para criar um novo produto
   const createProduct = async (name, description, quantity) => {
-    await axios
-      .post("http://localhost:4444/products/create-product", {
-        name,
-        description,
-        quantity,
-      })
-      .then((res) => {
-        // console.log(res)
-        // console.log(res.data)
-        setProducts([...products, res.data.data]);
-        // pegarTodasAsProductsDaApi()
-      })
-      .catch((err) => console.log("erro ao pegar os dados da api", err));
-  };
-  const deleteProduct = async (id) => {
-    await axios
-      .delete(`http://localhost:4444/products/delete-product/${id}`)
-      .then((res) => {
-        // console.log(res)
-        // console.log(res.data)
-        setProducts(products.filter((n) => n._id !== id));
-        // pegarTodasAsProductsDaApi()
-      })
-      .catch((err) => console.log("erro ao pegar os dados da api", err));
+    try {
+      const response = await axios.post(
+        "http://localhost:4444/products/create-product",
+        { name, description, quantity },  // Dados do produto
+        { withCredentials: true }  // Configuração do cookie
+      );
+      setProducts((prevProducts) => [...prevProducts, response.data.data]);
+    } catch (err) {
+      console.error("Erro ao criar o produto", err);
+    }
   };
 
-  const editProduct = (name, description, quantity, id) => {
-    axios
-      .put(`http://localhost:4444/products/edit-product`, {
+
+  // Função para deletar um produto
+  const deleteProduct = async (id) => {
+    try {
+      await axios.delete(`http://localhost:4444/products/delete-product/${id}`, { withCredentials: true });
+      setProducts((prevProducts) => prevProducts.filter((product) => product._id !== id));
+    } catch (err) {
+      console.error("Erro ao deletar o produto", err);
+    }
+  };
+
+  // Função para editar um produto
+  const editProduct = async (name, description, quantity, id) => {
+    try {
+      const response = await axios.put("http://localhost:4444/products/edit-product", {
         name,
         description,
         quantity,
         _id: id,
-      })
-      .then((res) => {
-        // console.log(res)
-        // console.log(res.data)
-        let newUpdatedProducts = products.map((n) => {
-          if (n._id === id) {
-            return res.data.updatedProduct;
-          }
-          return n;
-        });
-        setProducts(newUpdatedProducts);
-      })
-      .catch((err) => console.log("erro ao pegar os dados da api", err));
+      },
+        { withCredentials: true });
+      setProducts((prevProducts) =>
+        prevProducts.map((product) =>
+          product._id === id ? response.data.updatedProduct : product
+        )
+      );
+    } catch (err) {
+      console.error("Erro ao editar o produto", err);
+    }
   };
 
   useEffect(() => {
     pegarTodasAsProductsDaApi();
-    // editProduct(1,"batatadoce","editado")
   }, []);
+
   const mudarModal = () => {
     setShowModal((state) => !state);
   };
 
-
-
-  // function fecharOModal(){
-  //   setShowModal(false)
-  // }
-  // function abrirOModal(){
-  //   setShowModal(true)
-  // }
-
-  const filteredProducts = products.filter((product) =>
-    product.quantity.toString().includes(filter)
-  );
-
   return (
     <div>
-      <form action="" className="div-filters">
-        <label htmlFor="filter">Faça uma pesquisa</label>
-        <input
-          type="text"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          placeholder="Filtro de nomes"
-          name="filter"
-          id="filter"
-        ></input>
-      </form>
-
-
       <AddButton abrirOModal={mudarModal} texto="Adicionar um produto" />
-      {showModal ? (
-        <Modal createProduct={createProduct} fecharOModal={mudarModal} />
-      ) : null}
-      {editingProduct ? (
+
+      {showModal && (
+        <Modal
+          createProduct={createProduct}
+          fecharOModal={mudarModal}
+        />
+      )}
+
+      {editingProduct && (
         <Modal
           createProduct={editProduct}
           editingProduct={editingProduct}
           fecharOModal={() => setEditingProduct(null)}
         />
-      ) : null}
-      <div className="Productslist">
-        {filteredProducts.map((n) => (
+      )}
+
+      <div id="productslist">
+        {products.map((product) => (
           <Product
-            {...n}
+            key={product._id} // Chave única
+            {...product}
             deleteProduct={deleteProduct}
             editProduct={editProduct}
-            setEditMode={(data) => setEditingProduct(data)}
+            setEditMode={(productData) => setEditingProduct(productData)}
           />
         ))}
       </div>
@@ -132,4 +107,4 @@ function ProductPage() {
   );
 }
 
-export default ProductPage;
+export default Products;
