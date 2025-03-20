@@ -23,6 +23,8 @@ function LoginForm(props) {
                 onChange={(e) => setUser({ ...user, email: e.target.value })}
                 placeholder="Email..."
                 name="email"
+                id='email'
+                data-testid="email-input"
             ></input>
             <label htmlFor="password">Senha</label>
             <input
@@ -32,8 +34,9 @@ function LoginForm(props) {
                 placeholder="Senha..."
                 name="password"
                 id="password" 
+                data-testid="password-input"
             />
-            <button type="submit">Logar</button> 
+            <button data-testid="submit-button">Entrar</button> 
         </form>
     )
 }
