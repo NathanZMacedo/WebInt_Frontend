@@ -16,7 +16,7 @@ function RegisterForm(props) {
 
     // Função para validar o nome
     const validateName = () => {
-        if (user.name.length < 4) {
+        if (user.name.length < 4 || user.name.charAt(0) !== er.name.charAt().toUpperCase()) {
             return "Nome precisa ter mais de 3 letras.";
         }
     };
@@ -85,7 +85,7 @@ function RegisterForm(props) {
                 value={user.name}
                 data-testid="name-input"
             />
-            
+
             {/* Onde aparece o erro de nome */}
             {errors.name && <p className="error" data-testid="error-name">{errors.name}</p>}
 

@@ -1,7 +1,9 @@
 import React, { useRef, useState, useEffect } from "react";
 import "./Chat.css";
 import { GiCardBurn } from "react-icons/gi";
-import { PokemonCard } from "../pokemon/pokemonCard/PokemonCard";
+import { PokemonCard } from "../pokemon/pokemonCard/pokemonCard";
+import { set } from "mongoose";
+
 export default function Chat({ socket }) {
     const bottomRef = useRef(null); // rolar automaticamente até o final do chat.
     const messageRef = useRef(null); // Uma referência ao campo de texto onde as mensagens são digitadas.
@@ -103,7 +105,7 @@ export default function Chat({ socket }) {
 
     return (
         <div className="chat-container">
-            {showModal === true ? (
+            {showModal == true ? (
                 <PokemonCard
                     onClose={() => mudarModal()}
                     sendPokemonMessage={sendPokemonMessage}
