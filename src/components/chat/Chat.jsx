@@ -149,8 +149,9 @@ export default function Chat({ socket }) {
                         className="chat-input"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
+                        data-testid="message-input" 
                     />
-                    <button className="chat-button" onClick={() => handleSubmit()}>
+                    <button className="chat-button" onClick={() => handleSubmit()} data-testid="send-button">
                         Enviar Mensagem
                     </button>
                 </div>

@@ -24,9 +24,10 @@ export default function Join({ setChatVisibility, setSocket }) {
                     className="join-input"
                     type="text"
                     placeholder="Nome de usuário"
+                    data-testid="name-input"
                 />
             </div>
-            <button className="join-button" onClick={handleSubmit}>
+            <button className="join-button" onClick={handleSubmit} data-testid="submit-button">
                 Entrar
             </button>
         </div>
