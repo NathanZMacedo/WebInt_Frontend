@@ -1,8 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import "./Chat.css";
 import { GiCardBurn } from "react-icons/gi";
-import { PokemonCard } from "../pokemon/pokemonCard/pokemonCard";
-import { set } from "mongoose";
+import { PokemonCard } from "../pokemon/pokemonCard/PokemonCard.jsx"
 
 export default function Chat({ socket }) {
     const bottomRef = useRef(null); // rolar automaticamente até o final do chat.
@@ -43,8 +42,8 @@ export default function Chat({ socket }) {
             bottomRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
         }
     };
+    
     // Função que rola o chat até o final, sempre que a lista de mensagens for atualizada.
-
     const clearInput = () => {
         if (messageRef.current) {
             messageRef.current.value = "";
@@ -58,6 +57,7 @@ export default function Chat({ socket }) {
             messageRef.current.focus();
         }
     };
+
 
     // Função que coloca o foco no campo de texto, quando o componente é montado.
 
@@ -104,58 +104,67 @@ export default function Chat({ socket }) {
     }
 
     return (
-        <div className="chat-container">
-            {showModal == true ? (
-                <PokemonCard
-                    onClose={() => mudarModal()}
-                    sendPokemonMessage={sendPokemonMessage}
-                >
-                </PokemonCard>
-            ) : null}
-            <div className="chat-box">
-                <div className="chat-header">Bate Papo</div>
-                <div className="chat-messages">
-                    {messageList.map((message, index) => (
-                        <div
-                            className={`chat-message ${message.authorId === socket.id ? "own-message" : "other-message"
-                                }`}
-                            key={index}
-                        >
-                            {message.type === "text" && (
-                                <div>
-                                    <strong>{message.author}</strong>
-                                    <div>{message.text}</div>
-                                </div>
-                            )}
-                            {message.type === "pokemon" && (
-                                <div>
-                                    <strong>{message.author}</strong>
-                                    <div>
-                                        <img src={message.pokemon.image} alt={message.pokemon.name} />
-                                        <div> {message.pokemon.name} </div>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                    <div ref={bottomRef} />
-                </div>
-                <div className="chat-input-container">
-                    <GiCardBurn color="white" width={32} onClick={() => mudarModal()} />
-                    <input
-                        ref={messageRef}
-                        placeholder="Mensagem"
-                        onKeyDown={(e) => getEnterKey(e)}
-                        className="chat-input"
-                        value={inputValue}
-                        onChange={(e) => setInputValue(e.target.value)}
-                        data-testid="message-input" 
-                    />
-                    <button className="chat-button" onClick={() => handleSubmit()} data-testid="send-button">
-                        Enviar Mensagem
-                    </button>
-                </div>
-            </div>
+      <div className="chat-container">
+        {showModal === true ? (
+          <PokemonCard
+            onClose={() => mudarModal()}
+            sendPokemonMessage={sendPokemonMessage}
+          ></PokemonCard>
+        ) : null}
+        <div className="chat-box">
+          <div className="chat-header">Bate Papo</div>
+          <div className="chat-messages">
+            {messageList.map((message, index) => (
+              <div
+                className={`chat-message ${
+                  message.authorId === socket.id
+                    ? "own-message"
+                    : "other-message"
+                }`}
+                key={index}
+              >
+                {message.type === "text" && (
+                  <div>
+                    <strong>{message.author}</strong>
+                    <div>{message.text}</div>
+                  </div>
+                )}
+                {message.type === "pokemon" && (
+                  <div>
+                    <strong>{message.author}</strong>
+                    <div>
+                      <img
+                        src={message.pokemon.image}
+                        alt={message.pokemon.name}
+                      />
+                      <div> {message.pokemon.name} </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+            <div ref={bottomRef} />
+          </div>
+          <div className="chat-input-container">
+            <GiCardBurn color="white" width={32} onClick={() => mudarModal()} />
+            <input
+              ref={messageRef}
+              placeholder="Mensagem"
+              onKeyDown={(e) => getEnterKey(e)}
+              className="chat-input"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              data-testid="message-input"
+            />
+            <button
+              data-testid="send-button"
+              className="chat-button"
+              onClick={() => handleSubmit()}
+            >
+              Enviar Mensagem
+            </button>
+          </div>
         </div>
+      </div>
     );
 }

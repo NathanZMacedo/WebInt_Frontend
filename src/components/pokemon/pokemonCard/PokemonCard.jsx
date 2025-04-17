@@ -1,6 +1,6 @@
 import React from "react";
 import "./PokemonCard.css";
-import { usePokemonStore } from "../../../store/pokemonStore";
+import { PokemonStore } from "../../../store/UsePokemonStore.jsx"
 import axios from "axios";
 import { AiFillCloseCircle } from "react-icons/ai";
 
